@@ -8,6 +8,7 @@
 
 
     $valid = 1;
+    $errors = array();
 
     //ตัวแปรรับค่า
     $car_name               = $_POST['car_name'];
@@ -18,78 +19,23 @@
     $insurance_company_name = $_POST['insurance_company_name'];
     $other_details          = $_POST['other_details'];
     // รับค่าข้อมูลส่วนตัว Name Lname E-mail Tel
-    $cus_name                   = $_POST['name'];
-    $cus_lname                  = $_POST['lname'];
-    $cus_email                  = $_POST['email'];
-    $cus_tel                    = $_POST['tel'];
-    // รับค่าข้อมูลที่อยู่ Address City State Zip
-    $address                = $_POST['address'];
-    $city                   = $_POST['city'];
-    $state                  = $_POST['state'];
-    $zip                    = $_POST['zip'];
-    $date_created           = date('Y-m-d H:i:s');
+    $cus_name                   = $_POST['cus_name'];
+    $cus_lname                  = $_POST['cus_lname'];
+    $cus_email                  = $_POST['cus_email'];
+    $cus_tel                    = $_POST['cus_tel'];
+
+    $address      = $_POST['cus_address'];
+    $provinces     = $_POST['cus_province'];
+    $districts    = $_POST['cus_district'];
+    $subdistricts  = $_POST['cus_subdistrict'];
+    $zipcode          = $_POST['cus_zipcode'];
+    $date_created     = date('Y-m-d H:i:s');
 
 
     //ตรวจสอบว่าค่าอินพุตว่างเปล่าหรือไม่
-    if (empty($car_name)) {
+    if (empty($cus_name) || empty($cus_lname) || empty($cus_email) || empty($cus_tel) || empty($cus_address) || empty($cus_province) || empty($cus_district) || empty($cus_subdistrict) || empty($cus_zip) || empty($car_name) || empty($car_model) || empty($car_manufacturer) || empty($license_plate_number) || empty($vin_number) || empty($insurance_company_name)) {
       $valid = 0;
-      $errors[] = "Car Name can not be empty";
-    }
-    if (empty($car_model)) {
-      $valid = 0;
-      $errors[] = "Car Model can not be empty";
-    }
-    if (empty($car_manufacturer)) {
-      $valid = 0;
-      $errors[] = "Car Manufacturer can not be empty";
-    }
-    if (empty($license_plate_number)) {
-      $valid = 0;
-      $errors[] = "License Plate Number can not be empty";
-    }
-    if (empty($vin_number)) {
-      $valid = 0;
-      $errors[] = "Vin Number can not be empty";
-    }
-    if (empty($insurance_company_name)) {
-      $valid = 0;
-      $errors[] = "Insurance Company Name can not be empty";
-    }
-    if (empty($other_details)) {
-      $valid = 0;
-      $errors[] = "Other Details can not be empty";
-    }
-    if (empty($cus_name)) {
-      $valid = 0;
-      $errors[] = "Name can not be empty";
-    }
-    if (empty($cus_lname)) {
-      $valid = 0;
-      $errors[] = "Lname can not be empty";
-    }
-    if (empty($cus_email)) {
-      $valid = 0;
-      $errors[] = "E-mail can not be empty";
-    }
-    if (empty($cus_tel)) {
-      $valid = 0;
-      $errors[] = "Tel can not be empty";
-    }
-    if (empty($address)) {
-      $valid = 0;
-      $errors[] = "Address can not be empty";
-    }
-    if (empty($city)) {
-      $valid = 0;
-      $errors[] = "City can not be empty";
-    }
-    if (empty($state)) {
-      $valid = 0;
-      $errors[] = "State can not be empty";
-    }
-    if (empty($zip)) {
-      $valid = 0;
-      $errors[] = "Zip can not be empty";
+      $errors[] = "You must have to fill all the fields";
     }
 
     //ตัวแปรภาพ
@@ -115,17 +61,16 @@
 
     //if everthing is fine
     if ($valid == 1) {
-
-
-
       //Upload Car Image
       $car_image_file = $file_name . '-car-image-' . time() . '.' . $car_image_ext;
       move_uploaded_file($car_image_tmp, 'uploads/cars/' . $car_image_file);
 
       //แทรกลงในแบบสอบถามรถยนต์
-      $stmt = $conn->prepare("INSERT INTO cars (car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?)");
+      $stmt = $conn->prepare("INSERT INTO cars (cus_name, cus_lname, cus_email, cus_tel, cus_address, cus_province, cus_district, cus_subdistrict, cus_zipcode car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
       //ใส่ในการประมวลผลข้อมูลรถยนต์
-      $run  = $stmt->execute(array($car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
+      $run = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $cus_province, $cus_district, $cus_subdistrict, $cus_zipcode, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
+
       //if car data is inserted
       if ($run) {
         //เก็บข้อมูลสำเร็จ
@@ -134,13 +79,16 @@
         header('location: cars.php');
         exit();
       }
+      else {
+        $errors[] = "Failed to add new car";
+      }
     }
   }
+
+  
   ?>
   <!-- Page Wrapper -->
   <div id="wrapper">
-    <?php //include the navigation bar section 
-    ?>
     <?php include_once 'includes/nav.php'; ?>
 
     <!-- Content Wrapper -->
@@ -227,9 +175,17 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="cus_name">Customer Phone Number</label>
-                          <input type="tel" class="form-control form-control-user" id="cus_tel" placeholder="Enter Customer Phone Number" name="cus_tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">
+                          <input type="tel" class="form-control form-control-user" id="cus_tel" placeholder="Enter Customer Phone Number" name="cus_tel">
                         </div>
                       </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_address">Customer Address</label>
+                          <input type="text" class="form-control form-control-user" id="address" placeholder="Enter Customer address" name="address">
+                        </div>
+                      </div>
+
+                      <!-- ที่อยู่ดึงจากฐานข้อมูล -->
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Provinces</label>
@@ -239,16 +195,32 @@
                               <option value="<?= $value['id'] ?>"><?= $value['name_en'] ?></option>
                             <?php } ?>
                           </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
                           <label for="sel1">Districts</label>
                           <select class="form-control" name="Ref_dist_id" id="districts">
                           </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
                           <label for="sel1">Subdistricts</label>
                           <select class="form-control" name="Ref_subdist_id" id="subdistricts">
                           </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
                           <label for="sel1">Zip code</label>
                           <input type="text" name="zip_code" id="zip_code" class="form-control">
                         </div>
                       </div>
+                      <!-- End address database -->
 
                       <div class="col-lg-6">
                         <div class="form-group">
@@ -280,12 +252,43 @@
                           <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number">
                         </div>
                       </div>
+
+                      <!-- Insurance -->
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="insurance_company_name">Insurance Company Name</label>
-                          <input type="text" class="form-control form-control-user" id="insurance_company_name" placeholder="Enter Insurance Company Name" name="insurance_company_name">
+                          <select name="insurance_company_name" class="form-control" id="insurance_company_name">
+                            <option value="">กรุณาเลือกบริษัทประกันภัย</option>
+                            <option value="กรุงเทพประกันภัย"> กรุงเทพประกันภัย</option>
+                            <option value="เคเอสเค ประกันภัย"> เคเอสเค ประกันภัย</option>
+                            <option value="ทิพยประกันภัย"> ทิพยประกันภัย</option>
+                            <option value="ไทยวิวัฒน์"> ไทยวิวัฒน์</option>
+                            <option value="นวกิจประกันภัย"> นวกิจประกันภัย</option>
+                            <option value="เมืองไทยประกันภัย"> เมืองไทยประกันภัย</option>
+                            <option value="อลิอันซ์ อยุธยา"> อลิอันซ์ อยุธยา</option>
+                            <option value="เอ็มเอสไอจี"> เอ็มเอสไอจี</option>
+                            <option value="กรุงไทยพานิชประกันภัย"> กรุงไทยพานิชประกันภัย</option>
+                            <option value="เจมาร์ท ประกันภัย"> เจมาร์ท ประกันภัย</option>
+                            <option value="เทเวศประกันภัย"> เทเวศประกันภัย</option>
+                            <option value="ไทยศรี"> ไทยศรี</option>
+                            <option value="บริษัทกลางฯ"> บริษัทกลางฯ</option>
+                            <option value="วิริยะประกันภัย"> วิริยะประกันภัย</option>
+                            <option value="อลิอันซ์ อยุธยา ประกันภัย (เดิมเอ็นที)"> อลิอันซ์ อยุธยา ประกันภัย (เดิม) </option>
+                            <option value="เอ็นที">เอ็นที</option>
+                            <option value="แอกซ่าประกันภัย"> แอกซ่าประกันภัย</option>
+                            <option value="คุ้มภัยโตเกียวมารีน"> คุ้มภัยโตเกียวมารีน</option>
+                            <option value="ชับบ์สามัคคีประกันภัย"> ชับบ์สามัคคีประกันภัย</option>
+                            <option value="ไทยไพบูลย์"> ไทยไพบูลย์</option>
+                            <option value="ไทยเศรษฐฯ"> ไทยเศรษฐฯ</option>
+                            <option value="แปซิฟิค ครอส"> แปซิฟิค ครอส</option>
+                            <option value="สินมั่นคง"> สินมั่นคง</option>
+                            <option value="อินทรประกันภัย"> อินทรประกันภัย</option>
+                            <option value="แอลเอ็มจี ประกันภัย"> แอลเอ็มจี ประกันภัย</option>
+                          </select>
+
                         </div>
                       </div>
+
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="car_image">Car Image</label>
