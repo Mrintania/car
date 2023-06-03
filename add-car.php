@@ -24,19 +24,80 @@
     $cus_email                  = $_POST['cus_email'];
     $cus_tel                    = $_POST['cus_tel'];
 
-    $address      = $_POST['cus_address'];
-    $provinces     = $_POST['cus_province'];
-    $districts    = $_POST['cus_district'];
-    $subdistricts  = $_POST['cus_subdistrict'];
-    $zipcode          = $_POST['cus_zipcode'];
+    $cus_address      = $_POST['cus_address'];
+    $provinces = $_POST['Ref_prov_id'];
+    $districts = $_POST['Ref_dist_id'];
+    $subdistricts = $_POST['Ref_subdist_id'];
+    $zipcode = $_POST['zip_code'];
     $date_created     = date('Y-m-d H:i:s');
 
 
     //ตรวจสอบว่าค่าอินพุตว่างเปล่าหรือไม่
-    if (empty($cus_name) || empty($cus_lname) || empty($cus_email) || empty($cus_tel) || empty($cus_address) || empty($cus_province) || empty($cus_district) || empty($cus_subdistrict) || empty($cus_zip) || empty($car_name) || empty($car_model) || empty($car_manufacturer) || empty($license_plate_number) || empty($vin_number) || empty($insurance_company_name)) {
+    if (empty($cus_name)) {
       $valid = 0;
-      $errors[] = "You must have to fill all the fields";
+      $errors[] = "You must have to enter customer name";
     }
+    if (empty($cus_lname)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer last name";
+    }
+    if (empty($cus_email)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer email";
+    }
+    if (empty($cus_tel)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer phone number";
+    }
+    if (empty($cus_address)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer address";
+    }
+    if (empty($provinces)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer provinces";
+    }
+    if (empty($districts)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer districts";
+    }
+    if (empty($subdistricts)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer subdistricts";
+    }
+    if (empty($zipcode)) {
+      $valid = 0;
+      $errors[] = "You must have to enter customer zip code";
+    }
+    if (empty($car_name)) {
+      $valid = 0;
+      $errors[] = "You must have to enter car name";
+    }
+    if (empty($car_model)) {
+      $valid = 0;
+      $errors[] = "You must have to enter car model";
+    }
+    if (empty($car_manufacturer)) {
+      $valid = 0;
+      $errors[] = "You must have to enter car manufacturer";
+    }
+    if (empty($license_plate_number)) {
+      $valid = 0;
+      $errors[] = "You must have to enter license plate number";
+    }
+    if (empty($vin_number)) {
+      $valid = 0;
+      $errors[] = "You must have to enter VIN number";
+    }
+    if (empty($insurance_company_name)) {
+      $valid = 0;
+      $errors[] = "You must have to enter insurance company name";
+    }
+
+    // if (empty($cus_name) || empty($cus_lname) || empty($cus_email) || empty($cus_tel) || empty($cus_address) || empty($cus_province) || empty($cus_district) || empty($cus_subdistrict) || empty($cus_zip) || empty($car_name) || empty($car_model) || empty($car_manufacturer) || empty($license_plate_number) || empty($vin_number) || empty($insurance_company_name)) {
+    //   $valid = 0;
+    //   $errors[] = "You must have to fill all the fields";
+    // }
 
     //ตัวแปรภาพ
     $car_image     = $_FILES['car_image']['name'];
@@ -66,10 +127,12 @@
       move_uploaded_file($car_image_tmp, 'uploads/cars/' . $car_image_file);
 
       //แทรกลงในแบบสอบถามรถยนต์
-      $stmt = $conn->prepare("INSERT INTO cars (cus_name, cus_lname, cus_email, cus_tel, cus_address, cus_province, cus_district, cus_subdistrict, cus_zipcode car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      // $stmt = $conn->prepare("INSERT INTO cars (cus_name, cus_lname, cus_email, cus_tel, cus_address, provinces, districts, subdistricts, zipcode car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      $stmt = $conn->prepare("INSERT INTO cars (cus_name, cus_lname, cus_email, cus_tel, cus_address, provinces, districts, subdistricts, zipcode, car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
       //ใส่ในการประมวลผลข้อมูลรถยนต์
-      $run = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $cus_province, $cus_district, $cus_subdistrict, $cus_zipcode, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
+      // $run = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $provinces, $districts, $subdistricts, $zipcode, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
+      $run = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $provinces, $districts, $subdistricts, $zipcode, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
 
       //if car data is inserted
       if ($run) {
@@ -78,14 +141,13 @@
         //redirect to the cars page
         header('location: cars.php');
         exit();
-      }
-      else {
+      } else {
         $errors[] = "Failed to add new car";
       }
     }
   }
 
-  
+
   ?>
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -181,7 +243,7 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="cus_address">Customer Address</label>
-                          <input type="text" class="form-control form-control-user" id="address" placeholder="Enter Customer address" name="address">
+                          <input type="text" class="form-control form-control-user" id="cus_address" placeholder="Enter Customer address" name="cus_address">
                         </div>
                       </div>
 
@@ -201,7 +263,7 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Districts</label>
-                          <select class="form-control" name="Ref_dist_id" id="districts">
+                          <select class="form-control" name="Ref_dist_id" id="districts" value="<?  ?>">
                           </select>
                         </div>
                       </div>
