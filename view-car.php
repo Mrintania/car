@@ -36,7 +36,7 @@ $view_zipcode = $result_subdistricts['zip_code'];
 $sql = "SELECT * FROM cars WHERE id='$id'";
 $query = mysqli_query($con, $sql);
 $result = mysqli_fetch_assoc($query);
-$view_car_image = $result['car_image'];
+$car_image = $result['car_image'];
 
 ?>
 
@@ -63,11 +63,10 @@ $view_car_image = $result['car_image'];
                 </div>
                 <div class="card-body text-center">
                   <!-- Car Image Link -->
-                  <a href="uploads/cars/<?php echo $view_car_image; ?>">
+                  <a href="uploads/cars/<?php echo $car_image; ?>">
                     <!-- Display Car Image -->
-                    <img class="img-fluid rounded mb-2" src="uploads/cars/<?php echo $view_car_image; ?>">
+                    <img class="img-fluid rounded mb-2" src="uploads/cars/<?php echo $car_image; ?>" alt="image-car">
                   </a>
-
                 </div>
               </div>
             </div>

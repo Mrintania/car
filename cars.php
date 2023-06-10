@@ -1,6 +1,8 @@
-<?php //Page name ?>
+<?php //Page name 
+?>
 <?php $page = 'Cars';  ?>
-<?php //include the header section ?>
+<?php //include the header section 
+?>
 <?php include_once 'includes/header.php'; ?>
 
 <body id="page-top">
@@ -142,9 +144,9 @@
                               </div>
                             </div>
                           </div>
-                          <!-- Download to pdf -->
+                          <!-- Download to pdf
                           <a href="./export-car.php" class="btn btn-info btn-circle btn-sm">
-                          <i class="fas fa-download"></i>
+                          <i class="fas fa-download"></i> -->
                         </td>
                       </tr>
                     <?php endforeach; ?>
