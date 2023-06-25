@@ -20,7 +20,7 @@ $con = mysqli_connect("localhost", "root", "", "car_project_db") or die("Error: 
 $sql_provinces = "SELECT * FROM provinces WHERE id='$edit_provinces'";
 $sql_districts = "SELECT * FROM districts WHERE id='$edit_districts'";
 $sql_subdistricts = "SELECT * FROM subdistricts WHERE id='$edit_subdistricts'";
-$sql_zipcode = "SELECT * FROM subdistricts WHERE id='$view_zipcode'";
+// $sql_zipcode = "SELECT * FROM subdistricts WHERE id='$view_zipcode'";
 $query_provinces = mysqli_query($con, $sql_provinces);
 $query_districts = mysqli_query($con, $sql_districts);
 $query_subdistricts = mysqli_query($con, $sql_subdistricts);
@@ -96,10 +96,6 @@ $edit_zipcode = $result_subdistricts['zip_code'];
       $valid = 0;
       $errors[] = "You must have to enter customer subdistricts";
     }
-    if (empty($zipcode)) {
-      $valid = 0;
-      $errors[] = "You must have to enter customer zip code";
-    }
     if (empty($car_name)) {
       $valid = 0;
       $errors[] = "You must have to enter customer name";
@@ -119,22 +115,6 @@ $edit_zipcode = $result_subdistricts['zip_code'];
     if (empty($cus_address)) {
       $valid = 0;
       $errors[] = "You must have to enter customer address";
-    }
-    if (empty($provinces)) {
-      $valid = 0;
-      $errors[] = "You must have to enter customer provinces";
-    }
-    if (empty($districts)) {
-      $valid = 0;
-      $errors[] = "You must have to enter customer districts";
-    }
-    if (empty($subdistricts)) {
-      $valid = 0;
-      $errors[] = "You must have to enter customer subdistricts";
-    }
-    if (empty($zipcode)) {
-      $valid = 0;
-      $errors[] = "You must have to enter customer zip code";
     }
     if (empty($car_name)) {
       $valid = 0;
@@ -193,9 +173,12 @@ $edit_zipcode = $result_subdistricts['zip_code'];
         $car_image_file = $edit_car_image;
       }
       //update cars query
-      $stmt = $conn->prepare("UPDATE  cars  SET cus_name, cus_lname, cus_email, cus_tel, cus_address, provinces, districts, subdistricts, zipcode, car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-      //update cars data execution
-      $run  = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $provinces, $districts, $subdistricts, $zipcode, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $other_details, $car_image_file, $date_created));
+      $sql = "UPDATE cars SET cus_name=?, cus_lname=?, cus_email=?, cus_tel=?, cus_address=?, provinces=?, districts=?, subdistricts=?, car_name=?, car_model=?, car_manufacturer=?, license_plate_number=?, vin_number=?, insurance_company_name=?, car_image=?, other_details=?, date_created=? WHERE id=?";
+      //prepare the query
+      $stmt = $conn->prepare($sql);
+      //execute the query with proper values
+      $run = $stmt->execute(array($cus_name, $cus_lname, $cus_email, $cus_tel, $cus_address, $provinces, $districts, $subdistricts, $zip_code, $car_name, $car_model, $car_manufacturer, $license_plate_number, $vin_number, $insurance_company_name, $car_image_file, $other_details, $date_created, $id));
+      
       //if car data is inserted
       if ($run) {
         //store a success message in the SESSION
@@ -314,8 +297,8 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Provinces</label>
-                          <select class="form-control" name="Ref_prov_id" id="provinces" value="<?php echo $edit_provinces;?>">
-                            <option value="" selected disabled><?php echo $edit_provinces;?></option>
+                          <select class="form-control" name="Ref_prov_id" id="provinces" value="<?php echo $edit_provinces; ?>">
+                            <option value="" selected disabled><?php echo $edit_provinces; ?></option>
                             <?php foreach ($query as $value) { ?>
                               <option value="<?= $value['id'] ?>"><?= $value['name_en'] ?></option>
                             <?php } ?>
@@ -326,16 +309,16 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Districts</label>
-                          <select class="form-control" name="Ref_dist_id" id="districts">
-                            <option value="" selected disabled><?php echo $edit_districts;?></option>
+                          <select class="form-control" name="Ref_dist_id" id="districts" value="<?php echo $edit_districts;?>">
+                            <option value="" selected disabled><?php echo $edit_districts; ?></option>
                           </select>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Subdistricts</label>
-                          <select class="form-control" name="Ref_subdist_id" id="subdistricts">
-                            <option value="" selected disabled><?php echo $edit_subdistricts;?></option>
+                          <select class="form-control" name="Ref_subdist_id" id="subdistricts" >
+                            <option value="" selected disabled><?php echo $edit_subdistricts; ?></option>
                           </select>
                         </div>
                       </div>
@@ -343,7 +326,7 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Zip code</label>
-                          <input type="text" name="zip_code" id="zip_code" class="form-control" value="<?php echo $edit_zipcode;?>" disabled="enabled">
+                          <input type="text" name="zip_code" id="zip_code" class="form-control" value="<?php echo $edit_zipcode; ?>">
                         </div>
                       </div>
                       <!-- End address database -->
@@ -351,31 +334,31 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="car_name">Car Name</label>
-                          <input type="text" class="form-control form-control-user" id="car_name" placeholder="Enter Car Name" name="car_name">
+                          <input type="text" class="form-control form-control-user" id="car_name" placeholder="Enter Car Name" name="car_name" value="<?php echo $edit_car_name; ?>">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="car_model">Car Model</label>
-                          <input type="text" class="form-control form-control-user" id="car_model" placeholder="Enter Car Model" name="car_model">
+                          <input type="text" class="form-control form-control-user" id="car_model" placeholder="Enter Car Model" name="car_model" value="<?php echo $edit_car_model; ?>">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="car_manufacturer">Car Manufacturer</label>
-                          <input type="text" class="form-control form-control-user" id="car_manufacturer" placeholder="Enter Car Manufacturer" name="car_manufacturer">
+                          <input type="text" class="form-control form-control-user" id="car_manufacturer" placeholder="Enter Car Manufacturer" name="car_manufacturer" value="<?php echo $edit_car_manufacturer; ?>">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="license_plate_number">License Plate Number</label>
-                          <input type="text" class="form-control form-control-user" id="license_plate_number" placeholder="Enter License Plate Number" name="license_plate_number">
+                          <input type="text" class="form-control form-control-user" id="license_plate_number" placeholder="Enter License Plate Number" name="license_plate_number" value="<?php echo $edit_license_plate_number; ?>">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="vin_number">VIN Number</label>
-                          <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number">
+                          <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number" value="<?php echo $edit_vin_number; ?>">
                         </div>
                       </div>
 
@@ -383,8 +366,8 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="insurance_company_name">Insurance Company Name</label>
-                          <select name="insurance_company_name" class="form-control" id="insurance_company_name">
-                            <option value="">กรุณาเลือกบริษัทประกันภัย</option>
+                          <select name="insurance_company_name" class="form-control" id="insurance_company_name" value="">
+                            <option value="<?php echo $insurance_company_name;?>" selected disabled><?php echo $edit_insurance_company_name; ?></option>
                             <option value="กรุงเทพประกันภัย"> กรุงเทพประกันภัย</option>
                             <option value="เคเอสเค ประกันภัย"> เคเอสเค ประกันภัย</option>
                             <option value="ทิพยประกันภัย"> ทิพยประกันภัย</option>
@@ -428,26 +411,20 @@ $edit_zipcode = $result_subdistricts['zip_code'];
                         </div>
                       </div>
                     </div>
-
-
-
-                    <!-- End new version -->
-
-
-
+                    <button type="submit" class="btn btn-primary btn-user" name="update">
+                      Update
+                    </button>
+                  </form>
                 </div>
-                <button type="submit" class="btn btn-primary btn-user" name="update">
-                  Update
-                </button>
-                </form>
               </div>
             </div>
           </div>
         </div>
+        <!-- /.container-fluid -->
       </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- End of Main Content -->
-    <?php //include the footer section 
-    ?>
-    <?php include_once 'includes/footer.php'; ?>
+
+
+      <!-- End of Main Content -->
+      <?php //include the footer section 
+      ?>
+      <?php include_once 'includes/footer.php'; ?>
