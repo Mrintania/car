@@ -94,6 +94,11 @@
       $errors[] = "You must have to enter insurance company name";
     }
 
+    // if (empty($cus_name) || empty($cus_lname) || empty($cus_email) || empty($cus_tel) || empty($cus_address) || empty($cus_province) || empty($cus_district) || empty($cus_subdistrict) || empty($cus_zip) || empty($car_name) || empty($car_model) || empty($car_manufacturer) || empty($license_plate_number) || empty($vin_number) || empty($insurance_company_name)) {
+    //   $valid = 0;
+    //   $errors[] = "You must have to fill all the fields";
+    // }
+
     //ตัวแปรภาพ
     $car_image     = $_FILES['car_image']['name'];
     $car_image_tmp = $_FILES['car_image']['tmp_name'];
@@ -118,9 +123,8 @@
     //if everthing is fine
     if ($valid == 1) {
       //Upload Car Image
-      $car_image_file = rand(1000, 1000000) . "-" . $car_image;
-      move_uploaded_file($car_image_tmp, "uploads/cars/" . $car_image_file);
-      
+      $car_image_file = $file_name . '-car-image-' . time() . '.' . $car_image_ext;
+      move_uploaded_file($car_image_tmp, 'uploads/cars/' . $car_image_file);
 
       //แทรกลงในแบบสอบถามรถยนต์
       // $stmt = $conn->prepare("INSERT INTO cars (cus_name, cus_lname, cus_email, cus_tel, cus_address, provinces, districts, subdistricts, zipcode car_name, car_model, car_manufacturer, license_plate_number, vin_number, insurance_company_name, other_details, car_image, date_created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -267,7 +271,7 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Subdistricts</label>
-                          <select class="form-control" name="Ref_subdist_id" id="subdistricts" value="<?  ?>" >
+                          <select class="form-control" name="Ref_subdist_id" id="subdistricts"  >
                           </select>
                         </div>
                       </div>

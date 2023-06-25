@@ -402,62 +402,8 @@ extract($row, EXTR_PREFIX_ALL, "edit");
                                 </div>
                               </div>
                             </div>
-                            <!-- cus_lname -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="cus_name">Customer Last Name</label>
-                                <input type="text" class="form-control form-control-user" id="cus_name" placeholder="Enter Customer Name" name="cus_name" value="<?php echo $edit_cus_lname; ?>">
-                              </div>
-                            </div>
-                            <!-- cus_email -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="cus_email">Customer E-mail</label>
-                                <input type="text" class="form-control form-control-user" id="cus_email" placeholder="Enter Customer E-mail" name="cus_email" value="<?php echo $edit_cus_email; ?>">
-                              </div>
-                            </div>
-                            <!-- cus_tel -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="cus_tel">Customer Telephone nummber</label>
-                                <input type="text" class="form-control form-control-user" id="cus_tel" placeholder="Enter Customer Tel" name="cus_tel" value="<?php echo $edit_cus_tel; ?>">
-                              </div>
-                            </div>
-                            <!-- cus_address -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="cus_address">Customer Address</label>
-                                <input type="text" class="form-control form-control-user" id="cus_address" placeholder="Enter Customer Address" name="cus_address" value="<?php echo $edit_cus_address; ?>">
-                              </div>
-                            </div>
-                            <!-- cus_provinces -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="provinces">Provinces</label>
-                                <select class="form-control form-control-user" id="provinces" name="Ref_prov_id">
-                                  <option value="<?php echo $edit_provinces; ?>"><?php echo $edit_provinces; ?></option>
-                                  <?php
-                                  $sql = "SELECT * FROM provinces";
-                                  $query = mysqli_query($con, $sql);
-                                  while ($result = mysqli_fetch_assoc($query)) {
-                                    echo "<option value='" . $result['id'] . "'>" . $result['name_en'] . "</option>";
-                                  }
-                                  ?>
-                                </select>
-                              </div>
-                            </div>
-                        </div>
-                        <!-- cus_districts -->
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="districts">Districts</label>
-                            <select class="form-control form-control-user" id="districts" name="Ref_dist_id">
-                              <option value="<?php echo $edit_districts; ?>"><?php echo $edit_districts; ?></option>
-                            </select>
-
-                          </div>
-                        </div>
-
+                            
+                            
 
                         <!-- End new version -->
 
