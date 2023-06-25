@@ -79,4 +79,6 @@ $mpdf = new Mpdf();
 
 // กำหนดเนื้อหา HTML ให้กับ Mpdf
 $mpdf->WriteHTML($html);
+
+
 $mpdf->Output('car_details.pdf', 'D');
