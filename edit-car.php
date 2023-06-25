@@ -15,6 +15,22 @@ $stmt->execute(array($id));
 $row = $stmt->fetch();
 //extract the record/result
 extract($row, EXTR_PREFIX_ALL, "edit");
+
+$con = mysqli_connect("localhost", "root", "", "car_project_db") or die("Error: " . mysqli_error($con));
+$sql_provinces = "SELECT * FROM provinces WHERE id='$edit_provinces'";
+$sql_districts = "SELECT * FROM districts WHERE id='$edit_districts'";
+$sql_subdistricts = "SELECT * FROM subdistricts WHERE id='$edit_subdistricts'";
+$sql_zipcode = "SELECT * FROM subdistricts WHERE id='$view_zipcode'";
+$query_provinces = mysqli_query($con, $sql_provinces);
+$query_districts = mysqli_query($con, $sql_districts);
+$query_subdistricts = mysqli_query($con, $sql_subdistricts);
+$result_provinces = mysqli_fetch_assoc($query_provinces);
+$result_districts = mysqli_fetch_assoc($query_districts);
+$result_subdistricts = mysqli_fetch_assoc($query_subdistricts);
+$edit_provinces = $result_provinces['name_en'];
+$edit_districts = $result_districts['name_en'];
+$edit_subdistricts = $result_subdistricts['name_en'];
+$edit_zipcode = $result_subdistricts['zip_code'];
 ?>
 
 <body id="page-top">
@@ -38,12 +54,11 @@ extract($row, EXTR_PREFIX_ALL, "edit");
     $cus_tel                    = $_POST['cus_tel'];
 
     $cus_address      = $_POST['cus_address'];
-    $provinces = $_POST['Ref_prov_id'];
-    $districts = $_POST['Ref_dist_id'];
-    $subdistricts = $_POST['Ref_subdist_id'];
-    $zipcode = $_POST['zip_code'];
+    $provinces        = $_POST['Ref_prov_id'];
+    $districts        = $_POST['Ref_dist_id'];
+    $subdistricts     = $_POST['Ref_subdist_id'];
+    $zipcode          = $_POST['zip_code'];
     $date_created     = date('Y-m-d H:i:s');
-    $date_created           = date('Y-m-d H:i:s');
 
 
 
@@ -247,6 +262,15 @@ extract($row, EXTR_PREFIX_ALL, "edit");
                   </div>
                 <?php endforeach; ?>
               <?php endif; ?>
+              <?php
+              $con = mysqli_connect("localhost", "root", "", "car_project_db") or die("Error: " . mysqli_error($con));
+              mysqli_query($con, "SET NAMES 'utf8' ");
+              error_reporting(error_reporting() & ~E_NOTICE);
+              date_default_timezone_set('Asia/Bangkok');
+
+              $sql_provinces = "SELECT * FROM provinces";
+              $query = mysqli_query($con, $sql_provinces);
+              ?>
 
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -255,224 +279,175 @@ extract($row, EXTR_PREFIX_ALL, "edit");
                 <div class="card-body">
                   <form class="" method="POST" action="" enctype="multipart/form-data">
                     <div class="row">
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="cus_name">Customer Name</label>
-                                  <input type="text" class="form-control form-control-user" id="cus_name" placeholder="Enter Customer Name" name="cus_name" value="<?php echo $edit_cus_name; ?>">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="cus_lname">Customer Last name</label>
-                                  <input type="text" class="form-control form-control-user" id="cus_lname" placeholder="Enter Customer Last Name" name="cus_lname"value="<?php echo $edit_cus_lname; ?>">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="cus_name">Customer E-mail</label>
-                                  <input type="email" class="form-control form-control-user" id="cus_email" placeholder="Enter Customer E-mail" name="cus_email"value="<?php echo $edit_cus_email; ?>">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="cus_name">Customer Phone Number</label>
-                                  <input type="tel" class="form-control form-control-user" id="cus_tel" placeholder="Enter Customer Phone Number" name="cus_tel"value="<?php echo $edit_cus_tel; ?>">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="cus_address">Customer Address</label>
-                                  <input type="text" class="form-control form-control-user" id="cus_address" placeholder="Enter Customer address" name="cus_address"value="<?php echo $edit_cus_address; ?>">
-                                </div>
-                              </div>
-
-                              <!-- ที่อยู่ดึงจากฐานข้อมูล -->
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="sel1">Provinces</label>
-                                  <select class="form-control" name="Ref_prov_id" id="provinces">
-                                    <option value="" selected disabled>-Choose provinces-</option>
-                                    <?php foreach ($query as $value) { ?>
-                                      <option value="<?= $value['id'] ?>"><?= $value['name_en'] ?></option>
-                                    <?php } ?>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="sel1">Districts</label>
-                                  <select class="form-control" name="Ref_dist_id" id="districts" value="<?  ?>">
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="sel1">Subdistricts</label>
-                                  <select class="form-control" name="Ref_subdist_id" id="subdistricts">
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="sel1">Zip code</label>
-                                  <input type="text" name="zip_code" id="zip_code" class="form-control">
-                                </div>
-                              </div>
-                              <!-- End address database -->
-
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="car_name">Car Name</label>
-                                  <input type="text" class="form-control form-control-user" id="car_name" placeholder="Enter Car Name" name="car_name">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="car_model">Car Model</label>
-                                  <input type="text" class="form-control form-control-user" id="car_model" placeholder="Enter Car Model" name="car_model">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="car_manufacturer">Car Manufacturer</label>
-                                  <input type="text" class="form-control form-control-user" id="car_manufacturer" placeholder="Enter Car Manufacturer" name="car_manufacturer">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="license_plate_number">License Plate Number</label>
-                                  <input type="text" class="form-control form-control-user" id="license_plate_number" placeholder="Enter License Plate Number" name="license_plate_number">
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="vin_number">VIN Number</label>
-                                  <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number">
-                                </div>
-                              </div>
-
-                              <!-- Insurance -->
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="insurance_company_name">Insurance Company Name</label>
-                                  <select name="insurance_company_name" class="form-control" id="insurance_company_name">
-                                    <option value="">กรุณาเลือกบริษัทประกันภัย</option>
-                                    <option value="กรุงเทพประกันภัย"> กรุงเทพประกันภัย</option>
-                                    <option value="เคเอสเค ประกันภัย"> เคเอสเค ประกันภัย</option>
-                                    <option value="ทิพยประกันภัย"> ทิพยประกันภัย</option>
-                                    <option value="ไทยวิวัฒน์"> ไทยวิวัฒน์</option>
-                                    <option value="นวกิจประกันภัย"> นวกิจประกันภัย</option>
-                                    <option value="เมืองไทยประกันภัย"> เมืองไทยประกันภัย</option>
-                                    <option value="อลิอันซ์ อยุธยา"> อลิอันซ์ อยุธยา</option>
-                                    <option value="เอ็มเอสไอจี"> เอ็มเอสไอจี</option>
-                                    <option value="กรุงไทยพานิชประกันภัย"> กรุงไทยพานิชประกันภัย</option>
-                                    <option value="เจมาร์ท ประกันภัย"> เจมาร์ท ประกันภัย</option>
-                                    <option value="เทเวศประกันภัย"> เทเวศประกันภัย</option>
-                                    <option value="ไทยศรี"> ไทยศรี</option>
-                                    <option value="บริษัทกลางฯ"> บริษัทกลางฯ</option>
-                                    <option value="วิริยะประกันภัย"> วิริยะประกันภัย</option>
-                                    <option value="อลิอันซ์ อยุธยา ประกันภัย (เดิมเอ็นที)"> อลิอันซ์ อยุธยา ประกันภัย (เดิม) </option>
-                                    <option value="เอ็นที">เอ็นที</option>
-                                    <option value="แอกซ่าประกันภัย"> แอกซ่าประกันภัย</option>
-                                    <option value="คุ้มภัยโตเกียวมารีน"> คุ้มภัยโตเกียวมารีน</option>
-                                    <option value="ชับบ์สามัคคีประกันภัย"> ชับบ์สามัคคีประกันภัย</option>
-                                    <option value="ไทยไพบูลย์"> ไทยไพบูลย์</option>
-                                    <option value="ไทยเศรษฐฯ"> ไทยเศรษฐฯ</option>
-                                    <option value="แปซิฟิค ครอส"> แปซิฟิค ครอส</option>
-                                    <option value="สินมั่นคง"> สินมั่นคง</option>
-                                    <option value="อินทรประกันภัย"> อินทรประกันภัย</option>
-                                    <option value="แอลเอ็มจี ประกันภัย"> แอลเอ็มจี ประกันภัย</option>
-                                  </select>
-
-                                </div>
-                              </div>
-
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label for="car_image">Car Image</label>
-                                  <input type="file" class="form-control form-control-user" id="car_image" name="car_image" style="padding-bottom: 36px;">
-                                </div>
-                              </div>
-                              <div class="col-lg-12">
-                                <div class="form-group">
-                                  <label for="other_details">Other Details <small style="color:tomato">(If any)</small></label>
-                                  <textarea class="form-control form-control-user" id="other_details" name="other_details"></textarea>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            
-
-                        <!-- End new version -->
-
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="car_name">Car Name</label>
-                            <input type="text" class="form-control form-control-user" id="car_name" placeholder="Enter Car Name" name="car_name" value="<?php echo $edit_car_name; ?>">
-                          </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_name">Customer Name</label>
+                          <input type="text" class="form-control form-control-user" id="cus_name" placeholder="Enter Customer Name" name="cus_name" value="<?php echo $edit_cus_name; ?>">
                         </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="car_model">Car Model</label>
-                            <input type="text" class="form-control form-control-user" id="car_model" placeholder="Enter Car Model" name="car_model" value="<?php echo $edit_car_model; ?>">
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="car_manufacturer">Car Manufacturer</label>
-                            <input type="text" class="form-control form-control-user" id="car_manufacturer" placeholder="Enter Car Manufacturer" name="car_manufacturer" value="<?php echo $edit_car_manufacturer; ?>">
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="license_plate_number">License Plate Number</label>
-                            <input type="text" class="form-control form-control-user" id="license_plate_number" placeholder="Enter License Plate Number" name="license_plate_number" value="<?php echo $edit_license_plate_number; ?>">
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="vin_number">VIN Number</label>
-                            <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number" value="<?php echo $edit_vin_number; ?>">
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="insurance_company_name">Insurance Company Name</label>
-                            <input type="text" class="form-control form-control-user" id="insurance_company_name" placeholder="Enter Insurance Company Name" name="insurance_company_name" value="<?php echo $edit_insurance_company_name; ?>">
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="form-group">
-                            <label for="car_image">Car Image</label>
-                            <input type="file" class="form-control form-control-user" id="car_image" name="car_image" style="padding-bottom: 36px;">
-                          </div>
-                          <label for="car_image">Existing Image</label><br>
-                          <a href="uploads/cars/<?php echo $edit_car_image; ?>">
-                            <img class="img-thumbnail" width="200px" src="uploads/cars/<?php echo $edit_car_image; ?>" alt="car image">
-                          </a>
-                        </div>
-                        <div class="col-lg-12 mt-4">
-                          <div class="form-group">
-                            <label for="other_details">Other Details <small>If any</small></label>
-                            <textarea class="form-control form-control-user" id="other_details" name="other_details"><?php echo $edit_other_details; ?></textarea>
-                          </div>
-                        </div>
-
                       </div>
-                      <button type="submit" class="btn btn-primary btn-user" name="update">
-                        Update
-                      </button>
-                  </form>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_lname">Customer Last name</label>
+                          <input type="text" class="form-control form-control-user" id="cus_lname" placeholder="Enter Customer Last Name" name="cus_lname" value="<?php echo $edit_cus_lname; ?>">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_name">Customer E-mail</label>
+                          <input type="email" class="form-control form-control-user" id="cus_email" placeholder="Enter Customer E-mail" name="cus_email" value="<?php echo $edit_cus_email; ?>">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_name">Customer Phone Number</label>
+                          <input type="tel" class="form-control form-control-user" id="cus_tel" placeholder="Enter Customer Phone Number" name="cus_tel" value="<?php echo $edit_cus_tel; ?>">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="cus_address">Customer Address</label>
+                          <input type="text" class="form-control form-control-user" id="cus_address" placeholder="Enter Customer address" name="cus_address" value="<?php echo $edit_cus_address; ?>">
+                        </div>
+                      </div>
+
+                      <!-- ที่อยู่ดึงจากฐานข้อมูล -->
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="sel1">Provinces</label>
+                          <select class="form-control" name="Ref_prov_id" id="provinces" value="<?php echo $edit_provinces;?>">
+                            <option value="" selected disabled><?php echo $edit_provinces;?></option>
+                            <?php foreach ($query as $value) { ?>
+                              <option value="<?= $value['id'] ?>"><?= $value['name_en'] ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="sel1">Districts</label>
+                          <select class="form-control" name="Ref_dist_id" id="districts">
+                            <option value="" selected disabled><?php echo $edit_districts;?></option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="sel1">Subdistricts</label>
+                          <select class="form-control" name="Ref_subdist_id" id="subdistricts">
+                            <option value="" selected disabled><?php echo $edit_subdistricts;?></option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="sel1">Zip code</label>
+                          <input type="text" name="zip_code" id="zip_code" class="form-control" value="<?php echo $edit_zipcode;?>" disabled="enabled">
+                        </div>
+                      </div>
+                      <!-- End address database -->
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="car_name">Car Name</label>
+                          <input type="text" class="form-control form-control-user" id="car_name" placeholder="Enter Car Name" name="car_name">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="car_model">Car Model</label>
+                          <input type="text" class="form-control form-control-user" id="car_model" placeholder="Enter Car Model" name="car_model">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="car_manufacturer">Car Manufacturer</label>
+                          <input type="text" class="form-control form-control-user" id="car_manufacturer" placeholder="Enter Car Manufacturer" name="car_manufacturer">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="license_plate_number">License Plate Number</label>
+                          <input type="text" class="form-control form-control-user" id="license_plate_number" placeholder="Enter License Plate Number" name="license_plate_number">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="vin_number">VIN Number</label>
+                          <input type="text" class="form-control form-control-user" id="vin_number" placeholder="Enter VIN Number" name="vin_number">
+                        </div>
+                      </div>
+
+                      <!-- Insurance -->
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="insurance_company_name">Insurance Company Name</label>
+                          <select name="insurance_company_name" class="form-control" id="insurance_company_name">
+                            <option value="">กรุณาเลือกบริษัทประกันภัย</option>
+                            <option value="กรุงเทพประกันภัย"> กรุงเทพประกันภัย</option>
+                            <option value="เคเอสเค ประกันภัย"> เคเอสเค ประกันภัย</option>
+                            <option value="ทิพยประกันภัย"> ทิพยประกันภัย</option>
+                            <option value="ไทยวิวัฒน์"> ไทยวิวัฒน์</option>
+                            <option value="นวกิจประกันภัย"> นวกิจประกันภัย</option>
+                            <option value="เมืองไทยประกันภัย"> เมืองไทยประกันภัย</option>
+                            <option value="อลิอันซ์ อยุธยา"> อลิอันซ์ อยุธยา</option>
+                            <option value="เอ็มเอสไอจี"> เอ็มเอสไอจี</option>
+                            <option value="กรุงไทยพานิชประกันภัย"> กรุงไทยพานิชประกันภัย</option>
+                            <option value="เจมาร์ท ประกันภัย"> เจมาร์ท ประกันภัย</option>
+                            <option value="เทเวศประกันภัย"> เทเวศประกันภัย</option>
+                            <option value="ไทยศรี"> ไทยศรี</option>
+                            <option value="บริษัทกลางฯ"> บริษัทกลางฯ</option>
+                            <option value="วิริยะประกันภัย"> วิริยะประกันภัย</option>
+                            <option value="อลิอันซ์ อยุธยา ประกันภัย (เดิมเอ็นที)"> อลิอันซ์ อยุธยา ประกันภัย (เดิม) </option>
+                            <option value="เอ็นที">เอ็นที</option>
+                            <option value="แอกซ่าประกันภัย"> แอกซ่าประกันภัย</option>
+                            <option value="คุ้มภัยโตเกียวมารีน"> คุ้มภัยโตเกียวมารีน</option>
+                            <option value="ชับบ์สามัคคีประกันภัย"> ชับบ์สามัคคีประกันภัย</option>
+                            <option value="ไทยไพบูลย์"> ไทยไพบูลย์</option>
+                            <option value="ไทยเศรษฐฯ"> ไทยเศรษฐฯ</option>
+                            <option value="แปซิฟิค ครอส"> แปซิฟิค ครอส</option>
+                            <option value="สินมั่นคง"> สินมั่นคง</option>
+                            <option value="อินทรประกันภัย"> อินทรประกันภัย</option>
+                            <option value="แอลเอ็มจี ประกันภัย"> แอลเอ็มจี ประกันภัย</option>
+                          </select>
+
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="car_image">Car Image</label>
+                          <input type="file" class="form-control form-control-user" id="car_image" name="car_image" style="padding-bottom: 36px;">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label for="other_details">Other Details <small style="color:tomato">(If any)</small></label>
+                          <textarea class="form-control form-control-user" id="other_details" name="other_details"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <!-- End new version -->
+
+
+
                 </div>
+                <button type="submit" class="btn btn-primary btn-user" name="update">
+                  Update
+                </button>
+                </form>
               </div>
             </div>
           </div>
         </div>
-        <!-- /.container-fluid -->
       </div>
-      <!-- End of Main Content -->
-      <?php //include the footer section 
-      ?>
-      <?php include_once 'includes/footer.php'; ?>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+    <?php //include the footer section 
+    ?>
+    <?php include_once 'includes/footer.php'; ?>
