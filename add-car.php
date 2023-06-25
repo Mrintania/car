@@ -267,7 +267,7 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label for="sel1">Subdistricts</label>
-                          <select class="form-control" name="Ref_subdist_id" id="subdistricts">
+                          <select class="form-control" name="Ref_subdist_id" id="subdistricts" value="<?  ?>" >
                           </select>
                         </div>
                       </div>
